@@ -1,14 +1,7 @@
 const app = require('express')();
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
-const cors = require('cors');
-
-const corsOptions = {
-    origin: 'http://localhost:3000', // Replace with the URL of your React app
-    allowedHeaders: ["Access-Control-Allow-Origin"],
-};
-
-app.use(cors(corsOptions));
+const io = require('socket.io')(http, { cors: { origin: '*' } });
+// const cors = require('cors');
 
 io.on('connection', (socket) => {
   console.log('A user connected');
