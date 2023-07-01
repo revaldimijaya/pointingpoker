@@ -3,7 +3,6 @@ import './App.css';
 import cors from 'cors';
 
 
-
 function App() {
   App.use(cors());
   return (
