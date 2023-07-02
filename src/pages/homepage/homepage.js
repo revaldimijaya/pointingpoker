@@ -43,7 +43,7 @@ function Homepage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    socket.emit('message', {id: socket.id, room: room, pointingValue: pointingValue});
+    socket.emit('message', { id: socket.id, room: room, pointingValue: pointingValue });
   };
 
   const handleJoinRoom = (event) => {
@@ -99,6 +99,92 @@ function Homepage() {
               </Tooltip>
             }
           />
+          <Container className="mt-5">
+            <Row>
+              <h3 className="mb-3">Pointing Poker</h3>
+            </Row>
+            <Row>
+              <div className="join-room">
+                <Form onSubmit={handleJoinRoom}>
+                  <Form.Group>
+                    <Form.Control
+                      type="text"
+                      placeholder="name"
+                      value={name}
+                      onChange={handleNameChange}
+                    />
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Control
+                      type="text"
+                      placeholder="room 1"
+                      value={room}
+                      onChange={handleJoinRoomChange}
+                    />
+                  </Form.Group>
+                  <Button variant="primary" type="submit">
+                    Send
+                  </Button>
+                </Form>
+              </div>
+            </Row>
+            <br>
+            </br>
+            <Row>
+              <h4 className="mb-3">Participants</h4>
+              <Col md={6} className="offset-md-3">
+                <div className="messages">
+                  {participants.map((value, index) => (
+                    <div key={index} className="message">
+                      <Col>
+
+                      </Col>
+                      {value.id} {value.name} {value.value}
+                    </div>
+                  ))}
+                </div>
+              </Col>
+            </Row>
+            <br>
+            </br>
+            <Row>
+              <h4 className="mb-3">Pick your poison</h4>
+              <Col md={6} className="offset-md-3">
+                <Form onSubmit={handleSubmit}>
+                  <Form.Group>
+                    <Form.Control className='pointing-value'
+                      type="button"
+                      value={"1"}
+                      onClick={handleMessageChange}
+                    />
+                    <Form.Control className='pointing-value'
+                      type="button"
+                      value={"2"}
+                      onClick={handleMessageChange}
+                    />
+                    <Form.Control className='pointing-value'
+                      type="button"
+                      value={"5"}
+                      onClick={handleMessageChange}
+                    />
+                    <Form.Control className='pointing-value'
+                      type="button"
+                      value={"8"}
+                      onClick={handleMessageChange}
+                    />
+                    <Form.Control className='pointing-value'
+                      type="button"
+                      value={"12"}
+                      onClick={handleMessageChange}
+                    />
+                  </Form.Group>
+                  <Button variant="primary" type="submit">
+                    Submit
+                  </Button>
+                </Form>
+              </Col>
+            </Row>
+          </Container>
         </div>
       </Content>
       <Footer
@@ -109,93 +195,6 @@ function Homepage() {
         Ant Design ©2023 Created by Ant UED
       </Footer>
     </Layout>
-
-    // <Container className="mt-5">
-    //   <Row>
-    //     <h3 className="mb-3">Pointing Poker</h3>
-    //   </Row>
-    //   <Row>
-    //     <div className="join-room">
-    //       <Form onSubmit={handleJoinRoom}>
-    //         <Form.Group>
-    //           <Form.Control
-    //             type="text"
-    //             placeholder="name"
-    //             value={name}
-    //             onChange={handleNameChange}
-    //           />
-    //         </Form.Group>
-    //         <Form.Group>
-    //           <Form.Control
-    //             type="text"
-    //             placeholder="room 1"
-    //             value={room}
-    //             onChange={handleJoinRoomChange}
-    //           />
-    //         </Form.Group>
-    //         <Button variant="primary" type="submit">
-    //           Send
-    //         </Button>
-    //       </Form>
-    //     </div>
-    //   </Row>
-    //   <br>
-    //   </br>
-    //   <Row>
-    //     <h4 className="mb-3">Participants</h4>
-    //     <Col md={6} className="offset-md-3">
-    //       <div className="messages">
-    //         {participants.map((value,  index) => (
-    //           <div key={index} className="message">
-    //             <Col>
-
-    //             </Col>
-    //             {value.id} {value.name} {value.value}
-    //           </div>
-    //         ))}
-    //       </div>
-    //     </Col>
-    //   </Row>
-    //   <br>
-    //   </br>
-    //   <Row>
-    //     <h4 className="mb-3">Pick your poison</h4>
-    //     <Col md={6} className="offset-md-3">
-    //       <Form onSubmit={handleSubmit}>
-    //         <Form.Group>
-    //           <Form.Control className='pointing-value'
-    //             type="button"
-    //             value={"1"}
-    //             onClick={handleMessageChange}
-    //           />
-    //           <Form.Control className='pointing-value'
-    //             type="button"
-    //             value={"2"}
-    //             onClick={handleMessageChange}
-    //           />
-    //           <Form.Control className='pointing-value'
-    //             type="button"
-    //             value={"5"}
-    //             onClick={handleMessageChange}
-    //           />
-    //           <Form.Control className='pointing-value'
-    //             type="button"
-    //             value={"8"}
-    //             onClick={handleMessageChange}
-    //           />
-    //           <Form.Control className='pointing-value'
-    //             type="button"
-    //             value={"12"}
-    //             onClick={handleMessageChange}
-    //           />
-    //         </Form.Group>
-    //         <Button variant="primary" type="submit">
-    //           Submit
-    //         </Button>
-    //       </Form>
-    //     </Col>
-    //   </Row>
-    // </Container>
   );
 }
 
