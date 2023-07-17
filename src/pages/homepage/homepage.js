@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import './homepage.css'
-import { Breadcrumb, Layout, Menu, theme, Input, Tooltip } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Input, Tooltip, Card  } from 'antd';
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 const { Header, Content, Footer } = Layout;
 
@@ -58,47 +58,58 @@ function Homepage() {
 
   return (
     <Layout className="layout">
-      <Header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <div className="demo-logo" />
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={['1']}
-          items={items1}
-        />
-      </Header>
-      <Content
+      <Row justify="center" align="middle" style={{minHeight: '100vh', flexDirection: 'row'}}>
+        <Row 
+          gutter={{
+            xs: 8,
+            sm: 16,
+            md: 24,
+            lg: 32,
+          }}
+          style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}
+          >
+           <Col className="gutter-row" span={6}>
+            <Card
+              style={{
+                width: 200,
+                height: 250
+              }}
+            >
+              <p>Card content</p>
+            </Card>
+            <Card
+              style={{
+                width: 200,
+                height: 250
+              }}
+            >
+              <p>Card content</p>
+            </Card>
+          </Col>
+          <Col className="gutter-row" span={6}>
+            <Card
+              style={{
+                width: 200,
+                height: 250
+              }}
+            >
+              <p>Card content</p>
+            </Card>
+          </Col>
+         
+        </Row>
+      </Row>
+      {/* <Content
         style={{
           padding: '0 50px',
         }}
       >
-        <Breadcrumb
-          style={{
-            margin: '16px 0',
-          }}
-        >
-          <Breadcrumb.Item>Pointing Poker</Breadcrumb.Item>
-        </Breadcrumb>
         <div
           className="site-layout-content"
           style={{
             background: colorBgContainer,
           }}
         >
-          <Input
-            placeholder="Enter your username"
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            suffix={
-              <Tooltip title="Extra information">
-                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
-              </Tooltip>
-            }
-          />
           <Container className="mt-5">
             <Row>
               <h3 className="mb-3">Pointing Poker</h3>
@@ -186,14 +197,7 @@ function Homepage() {
             </Row>
           </Container>
         </div>
-      </Content>
-      <Footer
-        style={{
-          textAlign: 'center',
-        }}
-      >
-        Ant Design ©2023 Created by Ant UED
-      </Footer>
+      </Content> */}
     </Layout>
   );
 }

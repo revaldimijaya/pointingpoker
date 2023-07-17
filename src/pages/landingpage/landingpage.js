@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import {
-  Breadcrumb,
   Layout,
-  Menu,
-  theme,
   Input,
-  Tooltip,
   Button,
-  Checkbox,
   Form,
+  Row,
+  Image,
+  Tooltip,
 } from "antd";
 import { InfoCircleOutlined, UserOutlined } from "@ant-design/icons";
 import "./landingpage.css";
@@ -23,68 +21,70 @@ const onFinishFailed = (errorInfo) => {
 
 function Landingpage() {
   return (
-    <Layout className="layout">
-      <Header
-        style={{
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <div className="demo-logo" />
-        <h3 className="header-title"> Pointing Poker </h3>{" "}
-      </Header>{" "}
-      <Content  style={{
-          padding: '0 50px',
-        }}>
-        <Breadcrumb
-          style={{
-            margin: "16px 0",
-          }}
-        >
-          <Breadcrumb.Item>Pointing Poker</Breadcrumb.Item>
-        </Breadcrumb>
-        <Form
-          name="basic"
-          labelCol={{
-            span: 8,
-          }}
-          wrapperCol={{
-            span: 16,
-          }}
-          style={{
-            maxWidth: 600,
-          }}
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete="off"
-        >
-          <Form.Item
-            label="Username"
-            name="username"
-            rules={[
-              {
-                required: true,
-                message: "Please input your username!",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>{" "}
-          <Form.Item
-            wrapperCol={{
-              offset: 8,
-              span: 16,
-            }}
-          >
-            <Button type="primary" htmlType="submit">
-              Submit{" "}
-            </Button>{" "}
-          </Form.Item>{" "}
-        </Form>{" "}
-      </Content>{" "}
+    <Layout>
+        <Row justify="center" align="middle" style={{minHeight: '100vh', flexDirection: 'column'}}>
+          <Row style={{padding: "0px 50px 50px 50px"}}>
+            <Image
+              preview={false}
+              width={200}
+              src="https://static.thenounproject.com/png/1259530-200.png"
+            />
+          </Row>
+          <Row >
+            <Form
+              style={{
+                width: 300,
+                maxWidth: 600,
+              }}
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
+            >
+              <Form.Item
+                name="username"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your username!",
+                  },
+                ]}
+              >
+                 <Input
+                  placeholder="Enter your username"
+                  prefix={<UserOutlined className="site-form-item-icon" />}
+                  suffix={
+                    <Tooltip title="Extra information">
+                      <InfoCircleOutlined
+                        style={{
+                          color: 'rgba(0,0,0,.45)',
+                        }}
+                      />
+                    </Tooltip>
+                  }
+                />
+              </Form.Item>
+              <Form.Item
+                name="session"
+                rules={[
+                  {
+                    required: true,
+                    message: "Your session",
+                  },
+                ]}
+              >
+                <Input addonBefore="Session" />
+              </Form.Item>
+              <Form.Item style={{ display: 'flex', justifyContent: 'center' }} >
+                <Button type="primary" htmlType="submit">
+                  Join / Create
+                </Button>
+              </Form.Item>
+            </Form>
+          </Row>
+        </Row>
     </Layout>
   );
 }
