@@ -12,12 +12,14 @@ import {
   hashHistory,
 } from "react-router-dom";
 import Homepage from './pages/homepage/homepage';
+import Landingpage from './pages/landingpage/landingpage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Router>
     <Routes>
-      <Route path="/" element={<Homepage/>}></Route>
+      <Route path="/" element={<Landingpage/>}></Route>
+      <Route path="/session" element={<Homepage/>} ></Route>
     </Routes>
   </Router>
 );
