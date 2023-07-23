@@ -2,5 +2,5 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: flex-start; /* You can adjust this as needed */
+    justify-content: flex-start;
 }

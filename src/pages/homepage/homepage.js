@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import './homepage.css'
-import { Breadcrumb, Layout, Menu, theme, Input, Tooltip, Card, Typography, List, Avatar  } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Input, Tooltip, Card, Typography, List, Avatar, Button, Col  } from 'antd';
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-regular-svg-icons';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -14,10 +13,7 @@ const socket = io.connect('http://localhost:4000'); // Replace with your Socket.
 
 function Homepage() {
   const [room, setRoom] = useState('');
-  const [name, setName] = useState('');
   const [participants, setParticipants] = useState([]);
-  const [master, setMaster] = useState([]);
-  const [member, setMember] = useState([]);
   const [pointingValue, setPointingValue] = useState('');
   const {
     token: { colorBgContainer },
@@ -40,22 +36,12 @@ function Homepage() {
     }
 
     setRoom(additionalData.room)
+
     socket.emit('joinRoom', { room: additionalData.room, name: additionalData.name, value: 0, role: additionalData.role });
 
     socket.on('participants', (value) => {
       setParticipants(value)
     });
-
-    const filteredListMember = participants.filter((participant) =>
-      participant.role.toLowerCase().includes("member")
-    );
-
-    const filteredListMaster = participants.filter((participant) =>
-      participant.role.toLowerCase().includes("master")
-    );
-
-    setMember(filteredListMember)
-    setMaster(filteredListMaster)
     
     return () => {
       console.log("discconnect")
@@ -71,41 +57,52 @@ function Homepage() {
     setRoom(event.target.value)
   }
 
-  const handleNameChange = (event) => {
-    setName(event.target.value)
-  }
-
   const handleSubmit = (event) => {
     event.preventDefault();
     socket.emit('message', { id: socket.id, room: room, pointingValue: pointingValue });
   };
 
-  const handleJoinRoom = (event) => {
-    event.preventDefault();
-    socket.emit('joinRoom', { room: room, name: name, value: 0 });
-  };
+  const storyPoints = [
+    [1,2,3],
+    [5,8,13],
+    [20,40,100]
+  ]
 
   return (
     <Layout className="layout" style={{minHeight:'100vh'}}>
       <Sider width={200} style={{ background: colorBgContainer, padding: '0px 16px' }}>
-          <Typography.Title level={3}>Game Master</Typography.Title>
-              <List
-                itemLayout="horizontal"
-                dataSource={participants}
-                renderItem={(participant) => (
-                  <List.Item>
-                    <List.Item.Meta
-                      avatar={<FontAwesomeIcon icon={faUser} />}
-                      title={participant.name}
-                      // Add other participant details as needed
-                    />
-                  </List.Item>
-                )}
-              />
-          <Typography.Title level={3}>Participants</Typography.Title>
+          <Typography.Title level={4}>Game Master</Typography.Title>
           <List
             itemLayout="horizontal"
-            dataSource={participants}
+            dataSource={participants.filter((participant) =>participant.role.toLowerCase().includes("master"))}
+            renderItem={(participant) => (
+              <List.Item>
+                <List.Item.Meta
+                  avatar={<FontAwesomeIcon icon={faUser} />}
+                  title={participant.name}
+                
+                />
+              </List.Item>
+            )}
+          />
+          <Typography.Title level={4}>Members</Typography.Title>
+          <List
+            itemLayout="horizontal"
+            dataSource={participants.filter((participant) =>participant.role.toLowerCase().includes("member"))}
+            renderItem={(participant) => (
+              <List.Item>
+                <List.Item.Meta
+                  avatar={<FontAwesomeIcon icon={faUser} />}
+                  title={participant.name}
+                  // Add other participant details as needed
+                />
+              </List.Item>
+            )}
+          />
+          <Typography.Title level={4}>Observer</Typography.Title>
+          <List
+            itemLayout="horizontal"
+            dataSource={participants.filter((participant) =>participant.role.toLowerCase().includes("observer"))}
             renderItem={(participant) => (
               <List.Item>
                 <List.Item.Meta
@@ -118,28 +115,47 @@ function Homepage() {
           />
       </Sider>
       <Layout style={{ margin:'12px'}}>
-          <Breadcrumb style={{ margin: '12px' }}>
-              <Breadcrumb.Item>Session</Breadcrumb.Item>
-              <Breadcrumb.Item>{room}</Breadcrumb.Item>
-          </Breadcrumb>
-        <Layout justify="center" align="middle" style={{maxWidth :'100%'}}>
-        <div className="bucket-cards-container">
-            {participants.map((val, index) => (
-              <Col key={index} xs={24} sm={12} md={8} lg={6}>
-                <Card style={{
-                    width: 200,
-                    height: 250
-                  }} 
-                  title={val.name}>{val.value}
-                </Card>
-              </Col>
+        <Layout>
+            <Breadcrumb style={{ margin: '12px 12px' }}>
+                <Breadcrumb.Item>Session</Breadcrumb.Item>
+                <Breadcrumb.Item>{room}</Breadcrumb.Item>
+            </Breadcrumb>
+          <Layout justify="center" align="middle" style={{minHeight:'70vh'}}>
+          <div className="bucket-cards-container">
+              {participants.map((val, index) => (
+                <Col key={index}>
+                  <Card style={{
+                      width: 200,
+                      height: 240,
+                      margin: "0 12px"
+                    }} 
+                    title={val.name}>{val.value}
+                  </Card>
+                </Col>
+              ))}
+            </div>
+          </Layout>
+        </Layout>
+        <Layout style={{ margin:'0 12px'}}>
+          <Content style={{
+            padding: 24,
+            background: colorBgContainer,
+          }}>
+            {storyPoints.map((val) => (
+              <div>
+                {val.map((v) => (
+                  <Button type="dashed" shape="square" style={{margin:"12px", width:"64px"}} value={v}>
+                    {v}
+                  </Button>
+                ))}
+              </div>
             ))}
-          </div>
+          </Content>
         </Layout>
       </Layout>
       {/* <Content
         style={{
-          padding: '0 50px',
+          padding: '0 40px',
         }}
       >
         <div
@@ -148,9 +164,9 @@ function Homepage() {
             background: colorBgContainer,
           }}
         >
-          <Container className="mt-5">
+          <Container className="mt-4">
             <Row>
-              <h3 className="mb-3">Pointing Poker</h3>
+              <h4 className="mb-4">Pointing Poker</h4>
             </Row>
             <Row>
               <div className="join-room">
@@ -180,8 +196,8 @@ function Homepage() {
             <br>
             </br>
             <Row>
-              <h4 className="mb-3">Participants</h4>
-              <Col md={6} className="offset-md-3">
+              <h4 className="mb-4">Participants</h4>
+              <Col md={6} className="offset-md-4">
                 <div className="messages">
                   {participants.map((value, index) => (
                     <div key={index} className="message">
@@ -197,8 +213,8 @@ function Homepage() {
             <br>
             </br>
             <Row>
-              <h4 className="mb-3">Pick your poison</h4>
-              <Col md={6} className="offset-md-3">
+              <h4 className="mb-4">Pick your poison</h4>
+              <Col md={6} className="offset-md-4">
                 <Form onSubmit={handleSubmit}>
                   <Form.Group>
                     <Form.Control className='pointing-value'
@@ -213,7 +229,7 @@ function Homepage() {
                     />
                     <Form.Control className='pointing-value'
                       type="button"
-                      value={"5"}
+                      value={"4"}
                       onClick={handleMessageChange}
                     />
                     <Form.Control className='pointing-value'

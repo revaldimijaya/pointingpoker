@@ -22,8 +22,7 @@ function Landingpage() {
   const navigate = useNavigate()
 
   const onFinish = (values) => {
-    console.log("Success:", values);
-    const additionalData = { name: values.username, room: values.session, role: values.role };
+    const additionalData = { name: values.username, room: values.session, role: values.role.value };
     console.log(additionalData)
     navigate('/session', { state: additionalData });
   };
