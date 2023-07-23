@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import './homepage.css'
-import { Breadcrumb, Layout, Menu, theme, Input, Tooltip, Card  } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Input, Tooltip, Card, Typography, List, Avatar  } from 'antd';
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
-const { Header, Content, Footer } = Layout;
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
+const { Header, Content, Footer, Sider } = Layout;
 
 const socket = io.connect('http://localhost:4000'); // Replace with your Socket.IO server URL
 
@@ -13,21 +16,52 @@ function Homepage() {
   const [room, setRoom] = useState('');
   const [name, setName] = useState('');
   const [participants, setParticipants] = useState([]);
+  const [master, setMaster] = useState([]);
+  const [member, setMember] = useState([]);
   const [pointingValue, setPointingValue] = useState('');
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
+  const location = useLocation();
+  const navigate = useNavigate()
+  
   useEffect(() => {
+    const additionalData = location.state;
+    console.log(additionalData);
+
+    if (!additionalData) {
+      navigate('/');
+      return
+    }
+    if (!additionalData.room || !additionalData.name || !additionalData.role){
+      navigate('/');
+      return
+    }
+
+    setRoom(additionalData.room)
+    socket.emit('joinRoom', { room: additionalData.room, name: additionalData.name, value: 0, role: additionalData.role });
+
     socket.on('participants', (value) => {
       setParticipants(value)
     });
 
+    const filteredListMember = participants.filter((participant) =>
+      participant.role.toLowerCase().includes("member")
+    );
+
+    const filteredListMaster = participants.filter((participant) =>
+      participant.role.toLowerCase().includes("master")
+    );
+
+    setMember(filteredListMember)
+    setMaster(filteredListMaster)
+    
     return () => {
       console.log("discconnect")
       socket.disconnect();
     };
-  }, []);
+  },[]);
 
   const handleMessageChange = (event) => {
     setPointingValue(event.target.value);
@@ -51,54 +85,58 @@ function Homepage() {
     socket.emit('joinRoom', { room: room, name: name, value: 0 });
   };
 
-  const items1 = ['1'].map((key) => ({
-    key,
-    label: `Pointing`,
-  }));
-
   return (
-    <Layout className="layout">
-      <Row justify="center" align="middle" style={{minHeight: '100vh', flexDirection: 'row'}}>
-        <Row 
-          gutter={{
-            xs: 8,
-            sm: 16,
-            md: 24,
-            lg: 32,
-          }}
-          style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}
-          >
-           <Col className="gutter-row" span={6}>
-            <Card
-              style={{
-                width: 200,
-                height: 250
-              }}
-            >
-              <p>Card content</p>
-            </Card>
-            <Card
-              style={{
-                width: 200,
-                height: 250
-              }}
-            >
-              <p>Card content</p>
-            </Card>
-          </Col>
-          <Col className="gutter-row" span={6}>
-            <Card
-              style={{
-                width: 200,
-                height: 250
-              }}
-            >
-              <p>Card content</p>
-            </Card>
-          </Col>
-         
-        </Row>
-      </Row>
+    <Layout className="layout" style={{minHeight:'100vh'}}>
+      <Sider width={200} style={{ background: colorBgContainer, padding: '0px 16px' }}>
+          <Typography.Title level={3}>Game Master</Typography.Title>
+              <List
+                itemLayout="horizontal"
+                dataSource={participants}
+                renderItem={(participant) => (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={<FontAwesomeIcon icon={faUser} />}
+                      title={participant.name}
+                      // Add other participant details as needed
+                    />
+                  </List.Item>
+                )}
+              />
+          <Typography.Title level={3}>Participants</Typography.Title>
+          <List
+            itemLayout="horizontal"
+            dataSource={participants}
+            renderItem={(participant) => (
+              <List.Item>
+                <List.Item.Meta
+                  avatar={<FontAwesomeIcon icon={faUser} />}
+                  title={participant.name}
+                  // Add other participant details as needed
+                />
+              </List.Item>
+            )}
+          />
+      </Sider>
+      <Layout style={{ margin:'12px'}}>
+          <Breadcrumb style={{ margin: '12px' }}>
+              <Breadcrumb.Item>Session</Breadcrumb.Item>
+              <Breadcrumb.Item>{room}</Breadcrumb.Item>
+          </Breadcrumb>
+        <Layout justify="center" align="middle" style={{maxWidth :'100%'}}>
+        <div className="bucket-cards-container">
+            {participants.map((val, index) => (
+              <Col key={index} xs={24} sm={12} md={8} lg={6}>
+                <Card style={{
+                    width: 200,
+                    height: 250
+                  }} 
+                  title={val.name}>{val.value}
+                </Card>
+              </Col>
+            ))}
+          </div>
+        </Layout>
+      </Layout>
       {/* <Content
         style={{
           padding: '0 50px',

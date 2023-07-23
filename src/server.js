@@ -24,14 +24,14 @@ io.on('connection', (socket) => {
     socket.to(message.room).emit('participants', participants)
   });
 
-  socket.on('joinRoom', ({ room, name, value }) => {
+  socket.on('joinRoom', ({ room, name, value, role }) => {
     socket.join(room);
 
     // Add participant to the room
     if (!rooms.has(room)) {
       rooms.set(room, new Set());
     }
-    rooms.get(room).add({ id: socket.id, name, value });
+    rooms.get(room).add({ id: socket.id, name, value, role });
     // console.log(rooms)
 
     // Get the participant in the room

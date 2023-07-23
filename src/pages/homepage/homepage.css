@@ -1,5 +1,6 @@
-.pointing-value {
-    padding: 10px;
-    margin-right: 10px;
-    margin: 10px;
+.bucket-cards-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* You can adjust this as needed */
 }
