@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import './homepage.css'
-import { Breadcrumb, Layout, Menu, theme, Input, Tooltip, Card, Typography, List, Avatar, Button, Col  } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Input, Tooltip, Card, Typography, List, Avatar, Button, Col, FloatButton, TextArea  } from 'antd';
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { faUser } from '@fortawesome/free-regular-svg-icons';
+import { faUser, faEye } from '@fortawesome/free-regular-svg-icons';
+import { faE } from '@fortawesome/free-solid-svg-icons';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const socket = io.connect('http://localhost:4000'); // Replace with your Socket.IO server URL
 
 function Homepage() {
-  const [room, setRoom] = useState('');
+  const [user, setUser] = useState({});
   const [participants, setParticipants] = useState([]);
   const [pointingValue, setPointingValue] = useState('');
+  const [description, setDescription] = useState('');
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -35,7 +37,7 @@ function Homepage() {
       return
     }
 
-    setRoom(additionalData.room)
+    setUser({name: additionalData.name, room: additionalData.room, role: additionalData.role})
 
     socket.emit('joinRoom', { room: additionalData.room, name: additionalData.name, value: 0, role: additionalData.role });
 
@@ -50,26 +52,25 @@ function Homepage() {
   },[]);
 
   const handleMessageChange = (event) => {
-    setPointingValue(event.target.value);
-  };
-
-  const handleJoinRoomChange = (event) => {
-    setRoom(event.target.value)
-  }
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    socket.emit('message', { id: socket.id, room: room, pointingValue: pointingValue });
+    socket.emit('message', { id: socket.id, room: user.room, pointingValue: event.target.value });
   };
 
   const storyPoints = [
-    [1,2,3],
-    [5,8,13],
-    [20,40,100]
+    [0.5,1,2,3,5],
+    [8,13,21,34,56],
   ]
 
   return (
     <Layout className="layout" style={{minHeight:'100vh'}}>
+      {
+        user.role === "master" ? (
+          <div>
+            <FloatButton tooltip={<div>Jira</div>} />
+          </div>
+        ): (
+          <></>
+        )
+      }
       <Sider width={200} style={{ background: colorBgContainer, padding: '0px 16px' }}>
           <Typography.Title level={4}>Game Master</Typography.Title>
           <List
@@ -80,7 +81,6 @@ function Homepage() {
                 <List.Item.Meta
                   avatar={<FontAwesomeIcon icon={faUser} />}
                   title={participant.name}
-                
                 />
               </List.Item>
             )}
@@ -118,8 +118,16 @@ function Homepage() {
         <Layout>
             <Breadcrumb style={{ margin: '12px 12px' }}>
                 <Breadcrumb.Item>Session</Breadcrumb.Item>
-                <Breadcrumb.Item>{room}</Breadcrumb.Item>
+                <Breadcrumb.Item>{user.room}</Breadcrumb.Item>
             </Breadcrumb>
+          <Layout style={{ margin: '12px 12px' }}>
+          <Input.TextArea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Write some poison!"
+            autoSize={{ minRows: 1, maxRows: 5 }}
+          />
+          </Layout>
           <Layout justify="center" align="middle" style={{minHeight:'70vh'}}>
           <div className="bucket-cards-container">
               {participants.map((val, index) => (
@@ -137,121 +145,43 @@ function Homepage() {
           </Layout>
         </Layout>
         <Layout style={{ margin:'0 12px'}}>
-          <Content style={{
-            padding: 24,
-            background: colorBgContainer,
-          }}>
-            {storyPoints.map((val) => (
-              <div>
-                {val.map((v) => (
-                  <Button type="dashed" shape="square" style={{margin:"12px", width:"64px"}} value={v}>
-                    {v}
-                  </Button>
-                ))}
-              </div>
-            ))}
-          </Content>
-        </Layout>
-      </Layout>
-      {/* <Content
-        style={{
-          padding: '0 40px',
-        }}
-      >
-        <div
-          className="site-layout-content"
-          style={{
-            background: colorBgContainer,
-          }}
-        >
-          <Container className="mt-4">
-            <Row>
-              <h4 className="mb-4">Pointing Poker</h4>
-            </Row>
-            <Row>
-              <div className="join-room">
-                <Form onSubmit={handleJoinRoom}>
-                  <Form.Group>
-                    <Form.Control
-                      type="text"
-                      placeholder="name"
-                      value={name}
-                      onChange={handleNameChange}
-                    />
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Control
-                      type="text"
-                      placeholder="room 1"
-                      value={room}
-                      onChange={handleJoinRoomChange}
-                    />
-                  </Form.Group>
-                  <Button variant="primary" type="submit">
-                    Send
-                  </Button>
-                </Form>
-              </div>
-            </Row>
-            <br>
-            </br>
-            <Row>
-              <h4 className="mb-4">Participants</h4>
-              <Col md={6} className="offset-md-4">
-                <div className="messages">
-                  {participants.map((value, index) => (
-                    <div key={index} className="message">
-                      <Col>
-
-                      </Col>
-                      {value.id} {value.name} {value.value}
+          <div className='container'>
+            <div className='stickyDiv'>
+              { 
+                user.role === "member" ? (
+                  <>
+                  {storyPoints.map((val) => (
+                    <div >
+                      {val.map((v) => (
+                        <Button onClick={handleMessageChange} type="dashed" shape="square" style={{margin:"12px", width:"64px"}} value={v}>
+                          {v}
+                        </Button>
+                      ))}
                     </div>
                   ))}
-                </div>
-              </Col>
-            </Row>
-            <br>
-            </br>
-            <Row>
-              <h4 className="mb-4">Pick your poison</h4>
-              <Col md={6} className="offset-md-4">
-                <Form onSubmit={handleSubmit}>
-                  <Form.Group>
-                    <Form.Control className='pointing-value'
-                      type="button"
-                      value={"1"}
-                      onClick={handleMessageChange}
-                    />
-                    <Form.Control className='pointing-value'
-                      type="button"
-                      value={"2"}
-                      onClick={handleMessageChange}
-                    />
-                    <Form.Control className='pointing-value'
-                      type="button"
-                      value={"4"}
-                      onClick={handleMessageChange}
-                    />
-                    <Form.Control className='pointing-value'
-                      type="button"
-                      value={"8"}
-                      onClick={handleMessageChange}
-                    />
-                    <Form.Control className='pointing-value'
-                      type="button"
-                      value={"12"}
-                      onClick={handleMessageChange}
-                    />
-                  </Form.Group>
-                  <Button variant="primary" type="submit">
-                    Submit
-                  </Button>
-                </Form>
-              </Col>
-            </Row>
-          </Container>
-        </div>
-      </Content> */}
+                  </>
+                ) : (
+                  <>
+                  {
+                    user.role === "master" ? (
+                      <>
+                      <Button style={{margin:"6px 12px", width:"100px"}} type='primary'>Show All</Button>
+                      <Button style={{margin:"6px 12px", width:"100px"}} type='primary' danger>Reset</Button>
+                      </>
+                    ) : (
+                      <>
+                      <FontAwesomeIcon icon={faEye} />
+                      </>
+                    )
+                  }
+                  </>
+                )
+              
+              }
+            </div>
+          </div>
+        </Layout>
+      </Layout>
     </Layout>
   );
 }
