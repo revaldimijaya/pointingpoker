@@ -30,7 +30,7 @@ function Landingpage() {
     console.log("Failed:", errorInfo);
   };
 
-  const uuid = uuidv4()
+  const uuid = "test123"
   const initialValue = {
     session: uuid,
     role: { value: 'member', label: 'Member' }

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { Children, useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import './homepage.css'
-import { Breadcrumb, Layout, Menu, theme, Input, Tooltip, Card, Typography, List, Avatar, Button, Col, FloatButton, TextArea  } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Input, Tooltip, Card, Typography, List, Avatar, Button, Col, FloatButton, TextArea, Descriptions  } from 'antd';
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -15,8 +15,11 @@ const socket = io.connect('http://localhost:4000'); // Replace with your Socket.
 function Homepage() {
   const [user, setUser] = useState({});
   const [participants, setParticipants] = useState([]);
-  const [pointingValue, setPointingValue] = useState('');
   const [description, setDescription] = useState('');
+  const [showValue, setShowValue] = useState()
+  const [ticket, setTicket] = useState({})
+  const [calculate, setCalculate]= useState({})
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -26,8 +29,7 @@ function Homepage() {
   
   useEffect(() => {
     const additionalData = location.state;
-    console.log(additionalData);
-
+    console.log("Additional Data : ", additionalData)
     if (!additionalData) {
       navigate('/');
       return
@@ -39,26 +41,97 @@ function Homepage() {
 
     setUser({name: additionalData.name, room: additionalData.room, role: additionalData.role})
 
+    // // Emit a custom event to check if a given socket ID is the server's socket
+    // socket.emit('checkServerSocket', socket.id);
+
+    // // Listen for the result from the server
+    // socket.on('isServerSocket', (isServerSocket) => {
+    //   console.log(`Is server socket: ${isServerSocket}`);
+    // });
+
     socket.emit('joinRoom', { room: additionalData.room, name: additionalData.name, value: 0, role: additionalData.role });
 
     socket.on('participants', (value) => {
       setParticipants(value)
     });
     
+    socket.on('showAll', (payload) => {
+      // console.log("show all")
+      setShowValue(true)
+    })
+
+    socket.on('reset', (payload) => {
+      // console.log("reset")
+      setShowValue(false)
+    })
+
+    socket.on('ticket', (payload) => {
+      setTicket(payload)
+    })
+
+    socket.on('description', (payload) => {
+      console.log("description ", payload)
+      setDescription(payload.value)
+    })
+
+    socket.on('calculate', (payload) => {
+      console.log('calculate', payload)
+      setCalculate(payload)
+    })
     return () => {
       console.log("discconnect")
       socket.disconnect();
     };
-  },[]);
+  },[location.state, navigate]);
 
   const handleMessageChange = (event) => {
     socket.emit('message', { id: socket.id, room: user.room, pointingValue: event.target.value });
   };
 
+  const handleResetChange = (room) => {
+    socket.emit('reset', {value: false, room: user.room} )
+    socket.emit('calculate', {SP: 0, task: ''.task ,room: user.room})
+  }
+
+  const handleShowAllChange = (payload) => {
+    socket.emit('showAll', {value: true, room: user.room} )
+    console.log(sumValues)
+    socket.emit('calculate', {SP: taskAndSP.SP, task: taskAndSP.task ,room: user.room})
+  }
+
+  const handleDescriptionEnter = (event) => {
+    console.log("Key press ", event)
+    socket.emit('description',{value: description, room: user.room})
+  }
+
   const storyPoints = [
     [0.5,1,2,3,5],
     [8,13,21,34,56],
   ]
+
+  const summaryDescription = [
+    {
+      key: '1',
+      label: 'Task',
+      Children: '[PTP]',
+    },
+    {
+      key: '2',
+      label: 'Total SP',
+      Children: '22',
+    },
+  ]
+
+  const memberParticipants =  participants.filter((participant) => participant.role === 'member');
+
+  const sumValues = memberParticipants.reduce((acc, participant) => acc + parseInt(participant.value), 0);
+  const totalParticipants = memberParticipants.length;
+  const averageValue = totalParticipants > 0 ? sumValues / totalParticipants : 0;
+
+  const taskAndSP = {
+    task: description,
+    SP: averageValue
+  }
 
   return (
     <Layout className="layout" style={{minHeight:'100vh'}}>
@@ -121,23 +194,54 @@ function Homepage() {
                 <Breadcrumb.Item>{user.room}</Breadcrumb.Item>
             </Breadcrumb>
           <Layout style={{ margin: '12px 12px' }}>
-          <Input.TextArea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Write some poison!"
-            autoSize={{ minRows: 1, maxRows: 5 }}
-          />
+            <Input.TextArea
+              value={description}
+              onPressEnter={handleDescriptionEnter}
+              onChange={(e)=> setDescription(e.target.value)}
+              placeholder="Write some poison!"
+              autoSize={{ minRows: 2, maxRows: 2 }}
+            />
+          </Layout>
+          <Layout style={{ margin: '12px 12px' }}>
+            <Descriptions title="Summary" items={summaryDescription}>
+              <Descriptions.Item label="Task">{calculate.task}</Descriptions.Item>
+              <Descriptions.Item label="Total SP">{calculate.SP}</Descriptions.Item>
+            </Descriptions>
           </Layout>
           <Layout justify="center" align="middle" style={{minHeight:'70vh'}}>
           <div className="bucket-cards-container">
-              {participants.map((val, index) => (
+              { memberParticipants.map((val, index) => (
                 <Col key={index}>
                   <Card style={{
                       width: 200,
-                      height: 240,
-                      margin: "0 12px"
+                      margin: "0 12px 32px 12px"  
                     }} 
-                    title={val.name}>{val.value}
+                    title={val.name}>
+                      <div style={{margin:"24px 0px"}}>
+                        <span style={{fontSize:'48px',}}>
+                          {
+                            val.name === user.name ? (
+                              <>
+                                <div style={{color:"lightgreen"}}>{val.value}</div>
+                              </>
+                            ) : (
+                              <>
+                                {
+                                  showValue === true ? (
+                                    <>
+                                      {val.value}
+                                    </>
+                                  ) : (
+                                    <>
+                                     ?
+                                    </>
+                                  )
+                                }
+                              </>
+                            )
+                          }
+                        </span>
+                      </div>
                   </Card>
                 </Col>
               ))}
@@ -165,8 +269,8 @@ function Homepage() {
                   {
                     user.role === "master" ? (
                       <>
-                      <Button style={{margin:"6px 12px", width:"100px"}} type='primary'>Show All</Button>
-                      <Button style={{margin:"6px 12px", width:"100px"}} type='primary' danger>Reset</Button>
+                      <Button onClick={handleShowAllChange} value={user} style={{margin:"6px 12px", width:"100px"}} type='primary'>Show All</Button>
+                      <Button onClick={handleResetChange} value={user} style={{margin:"6px 12px", width:"100px"}} type='primary' danger>Reset</Button>
                       </>
                     ) : (
                       <>
