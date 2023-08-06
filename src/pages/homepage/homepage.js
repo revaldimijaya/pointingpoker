@@ -1,12 +1,13 @@
 import React, { Children, useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import './homepage.css'
-import { Breadcrumb, Layout, Menu, theme, Input, Tooltip, Card, Typography, List, Avatar, Button, Col, FloatButton, TextArea, Descriptions  } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Input, Tooltip, Card, Typography, List, Avatar, Button, Col, FloatButton, TextArea, Descriptions, Modal  } from 'antd';
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { faUser, faEye } from '@fortawesome/free-regular-svg-icons';
 import { faE } from '@fortawesome/free-solid-svg-icons';
+import Ticket from '../ticket/ticket';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -133,12 +134,43 @@ function Homepage() {
     SP: averageValue
   }
 
+  // ------------------- MODAL ----------------------------------------
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [modalText, setModalText] = useState('Content of the modal');
+  const showModal = () => {
+    setOpen(true);
+  };
+  const handleOk = () => {
+    setModalText('The modal will be closed after two seconds');
+    setConfirmLoading(true);
+    setTimeout(() => {
+      setOpen(false);
+      setConfirmLoading(false);
+    }, 2000);
+  };
+  const handleCancel = () => {
+    console.log('Clicked cancel button');
+    setOpen(false);
+  };
+
+  // ------------------- MODAL ----------------------------------------
+
   return (
     <Layout className="layout" style={{minHeight:'100vh'}}>
+      <Modal
+        title="Jira Ticket"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+      >
+        <Ticket param={{description: description, totalSP: averageValue}}/>
+      </Modal>
       {
         user.role === "master" ? (
           <div>
-            <FloatButton tooltip={<div>Jira</div>} />
+            <FloatButton onClick={showModal} tooltip={<div>Jira</div>} />
           </div>
         ): (
           <></>
