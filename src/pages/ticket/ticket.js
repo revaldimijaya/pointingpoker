@@ -14,7 +14,7 @@ function Ticket(param){
         <>
         <Form
             labelCol={{
-            span: 4,
+            span: 6,
             }}
             wrapperCol={{
             span: 14,
@@ -24,7 +24,7 @@ function Ticket(param){
             maxWidth: 600,
             }}
         >
-            <Form.Item label="Title">
+            <Form.Item label="Summary">
             <Input/>
             </Form.Item>
             <Form.Item label="Description">

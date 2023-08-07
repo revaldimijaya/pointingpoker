@@ -5,7 +5,7 @@ import { Breadcrumb, Layout, Menu, theme, Input, Tooltip, Card, Typography, List
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { faUser, faEye } from '@fortawesome/free-regular-svg-icons';
+import { faUser, faEye, faCopy } from '@fortawesome/free-regular-svg-icons';
 import { faE } from '@fortawesome/free-solid-svg-icons';
 import Ticket from '../ticket/ticket';
 
@@ -105,6 +105,16 @@ function Homepage() {
     socket.emit('description',{value: description, room: user.room})
   }
 
+  const [clicked, setClicked] = useState(false);
+
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(user.room);
+    setClicked(true);
+    setTimeout(() => {
+      setClicked(false);
+    }, 200); // Reset animation after 1 second
+  }
+
   const storyPoints = [
     [0.5,1,2,3,5],
     [8,13,21,34,56],
@@ -134,7 +144,7 @@ function Homepage() {
     SP: averageValue
   }
 
-  // ------------------- MODAL ----------------------------------------
+  // -------------------  MODAL ----------------------------------------
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState('Content of the modal');
@@ -223,7 +233,7 @@ function Homepage() {
         <Layout>
             <Breadcrumb style={{ margin: '12px 12px' }}>
                 <Breadcrumb.Item>Session</Breadcrumb.Item>
-                <Breadcrumb.Item>{user.room}</Breadcrumb.Item>
+                <Breadcrumb.Item>{user.room} <FontAwesomeIcon className={`icon ${clicked ? 'clicked' : ''}`} icon={faCopy} onClick={handleCopy}  /></Breadcrumb.Item>
             </Breadcrumb>
           <Layout style={{ margin: '12px 12px' }}>
             <Input.TextArea
