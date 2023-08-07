@@ -116,8 +116,8 @@ function Homepage() {
   }
 
   const storyPoints = [
-    [0.5,1,2,3,5],
-    [8,13,21,34,56],
+    [1,2,3,4,5],
+    [6,7,8,9,10],
   ]
 
   const summaryDescription = [
@@ -240,7 +240,7 @@ function Homepage() {
               value={description}
               onPressEnter={handleDescriptionEnter}
               onChange={(e)=> setDescription(e.target.value)}
-              placeholder="Write some poison!"
+              placeholder="Task Description"
               autoSize={{ minRows: 2, maxRows: 2 }}
             />
           </Layout>

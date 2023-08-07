@@ -63,7 +63,9 @@ function Landingpage() {
                 rules={[
                   {
                     required: true,
-                    message: "Please input your username!",
+                    message: "Please input your username 3 - 15 characters!",
+                    max: 15,
+                    min: 3
                   },
                 ]}
               >
