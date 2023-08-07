@@ -5,7 +5,7 @@ import { Breadcrumb, Layout, Menu, theme, Input, Tooltip, Card, Typography, List
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { faUser, faEye, faCopy } from '@fortawesome/free-regular-svg-icons';
+import { faUser, faEye, faCopy, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faE } from '@fortawesome/free-solid-svg-icons';
 import Ticket from '../ticket/ticket';
 
@@ -275,7 +275,17 @@ function Homepage() {
                                     </>
                                   ) : (
                                     <>
-                                     ?
+                                     {
+                                        val.value === 0 ? (
+                                          <>
+                                          ?
+                                          </>
+                                        ) : (
+                                          <>
+                                          <FontAwesomeIcon icon={faCheckCircle}></FontAwesomeIcon>
+                                          </>
+                                        )
+                                     }
                                     </>
                                   )
                                 }
