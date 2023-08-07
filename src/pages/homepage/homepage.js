@@ -11,7 +11,7 @@ import Ticket from '../ticket/ticket';
 
 const { Header, Content, Footer, Sider } = Layout;
 
-const socket = io.connect('http://localhost:4000'); // Replace with your Socket.IO server URL
+const socket = io.connect('https://pointingpoker-server-9bb6fe895460.herokuapp.com/'); // Replace with your Socket.IO server URL
 
 function Homepage() {
   const [user, setUser] = useState({});
