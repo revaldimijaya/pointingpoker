@@ -13,7 +13,7 @@ const { Header, Content, Footer, Sider } = Layout;
 
 const socket = io.connect('https://pointingpoker-server-9bb6fe895460.herokuapp.com/'); // Replace with your Socket.IO server URL
 
-function Homepage() {
+function Homepage({keyProp}) {
   const [user, setUser] = useState({});
   const [participants, setParticipants] = useState([]);
   const [description, setDescription] = useState('');
@@ -108,7 +108,7 @@ function Homepage() {
   const [clicked, setClicked] = useState(false);
 
   const handleCopy = (text) => {
-    navigator.clipboard.writeText(user.room);
+    navigator.clipboard.writeText("https://pointingpoker-revaldimijaya.vercel.app/"+user.room);
     setClicked(true);
     setTimeout(() => {
       setClicked(false);
@@ -233,21 +233,21 @@ function Homepage() {
         <Layout>
             <Breadcrumb style={{ margin: '12px 12px' }}>
                 <Breadcrumb.Item>Session</Breadcrumb.Item>
-                <Breadcrumb.Item>{user.room} <FontAwesomeIcon className={`icon ${clicked ? 'clicked' : ''}`} icon={faCopy} onClick={handleCopy}  /></Breadcrumb.Item>
+                <Breadcrumb.Item><span style={{marginRight:'8px'}}>{user.room}</span><FontAwesomeIcon className={`icon ${clicked ? 'clicked' : ''}`} icon={faCopy} onClick={handleCopy} /></Breadcrumb.Item>
             </Breadcrumb>
           <Layout style={{ margin: '12px 12px' }}>
             <Input.TextArea
               value={description}
               onPressEnter={handleDescriptionEnter}
               onChange={(e)=> setDescription(e.target.value)}
-              placeholder="Task Description"
-              autoSize={{ minRows: 2, maxRows: 2 }}
+              placeholder="Task description please enter to notify all"
+              autoSize={{ minRows: 3, maxRows: 5 }}
             />
           </Layout>
           <Layout style={{ margin: '12px 12px' }}>
-            <Descriptions title="Summary" items={summaryDescription}>
-              <Descriptions.Item label="Task">{calculate.task}</Descriptions.Item>
-              <Descriptions.Item label="Total SP">{calculate.SP}</Descriptions.Item>
+            <Descriptions title="Summary">
+              <Descriptions.Item labelStyle={{fontSize:'17px'}} label="Task"><span style={{fontSize:'17px'}}>{calculate.task}</span></Descriptions.Item>
+              <Descriptions.Item labelStyle={{fontSize:'17px'}} label="Total SP"><span style={{fontSize:'17px'}}>{calculate.SP == 0 ? '': calculate.SP}</span></Descriptions.Item>
             </Descriptions>
           </Layout>
           <Layout justify="center" align="middle" style={{minHeight:'70vh'}}>
@@ -258,13 +258,13 @@ function Homepage() {
                       width: 200,
                       margin: "0 12px 32px 12px"  
                     }} 
-                    title={val.name}>
+                    title={val.name === user.name ? val.name + ' (you)': val.name}>
                       <div style={{margin:"24px 0px"}}>
                         <span style={{fontSize:'48px',}}>
                           {
                             val.name === user.name ? (
                               <>
-                                <div style={{color:"lightgreen"}}>{val.value}</div>
+                                <div style={{color:"#97BC62FF"}}>{val.value}</div>
                               </>
                             ) : (
                               <>

@@ -18,7 +18,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Router>
     <Routes>
-      <Route path="/" element={<Landingpage/>}></Route>
+      <Route path="/:roomuuid?" element={<Landingpage/>}></Route>
       <Route path="/session" element={<Homepage/>} ></Route>
     </Routes>
   </Router>

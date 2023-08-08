@@ -13,13 +13,14 @@ import { InfoCircleOutlined, UserOutlined } from "@ant-design/icons";
 import "./landingpage.css";
 import Particles from '../components/particle.js';
 import { v4 as uuidv4 } from 'uuid';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const { Header, Content, Footer } = Layout;
 
 
-function Landingpage() {
+function Landingpage({keyProp}) {
   const navigate = useNavigate()
+  const roomuuid = useParams() 
 
   const onFinish = (values) => {
     const additionalData = { name: values.username, room: values.session, role: values.role.value };
@@ -29,10 +30,9 @@ function Landingpage() {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-
-  const uuid = uuidv4()
+  
   const initialValue = {
-    session: uuid,
+    session: roomuuid.roomuuid === undefined ? uuidv4() : roomuuid.roomuuid ,
     role: { value: 'member', label: 'Member' }
   }
 

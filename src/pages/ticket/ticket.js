@@ -37,6 +37,11 @@ function Ticket(param){
                 <Select.Option value="demo">Demo</Select.Option>
             </Select>
             </Form.Item>
+            <Form.Item label="Label">
+            <Select>
+                <Select.Option value="Techplan">Techplan</Select.Option>
+            </Select>
+            </Form.Item>
             <Form.Item label="Total SP">
             <InputNumber
                 controls

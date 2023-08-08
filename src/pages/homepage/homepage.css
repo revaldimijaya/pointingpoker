@@ -26,4 +26,7 @@
     opacity: 0.5;
 }
 
+.custom-descriptions .ant-descriptions-item-content {
+    font-size: 32px; /* Adjust the font size as needed */
+}
   
