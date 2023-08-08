@@ -8,6 +8,7 @@ import {
   Image,
   Tooltip,
   Select,
+  Card
 } from "antd";
 import { InfoCircleOutlined, UserOutlined } from "@ant-design/icons";
 import "./landingpage.css";
@@ -39,99 +40,103 @@ function Landingpage({keyProp}) {
   }
 
   return (
+    <div>
+    <Particles/>
     <Layout>
-      {/* <Particles/> */}
         <Row justify="center" align="middle" style={{minHeight: '100vh', flexDirection: 'column'}}>
-          <Row style={{padding: "0px 50px 50px 50px"}}>
-            <Image
-              preview={false}
-              width={200}
-              src="https://static.thenounproject.com/png/1259530-200.png"
-            />
-          </Row>
-          <Row >
-            <Form
-              style={{
-                width: 300,
-                maxWidth: 600,
-              }}
-              initialValues={initialValue}
-              onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
-              autoComplete="off"
-            >
-              <Form.Item
-                name="username"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your username 3 - 15 characters!",
-                    max: 15,
-                    min: 3
-                  },
-                ]}
+          <Card>
+            <Row style={{padding: "0px 50px 50px 50px"}}>
+              <Image
+                preview={false}
+                width={200}
+                src="https://static.thenounproject.com/png/1259530-200.png"
+              />
+            </Row>
+            <Row >
+              <Form
+                style={{
+                  width: 300,
+                  maxWidth: 600,
+                }}
+                initialValues={initialValue}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                autoComplete="off"
               >
-                 <Input
-                  placeholder="Enter your username"
-                  prefix={<UserOutlined className="site-form-item-icon" />}
-                  suffix={
-                    <Tooltip title="Extra information">
-                      <InfoCircleOutlined
-                        style={{
-                          color: 'rgba(0,0,0,.45)',
-                        }}
-                      />
-                    </Tooltip>
-                  }
-                />
-              </Form.Item>
-              <Form.Item
-                name="role"
-                rules={[
-                  {
-                    required: true,
-                    message: "Your role",
-                  },
-                ]}
-              >
-                <Select
-                  labelInValue
-                  options={[
+                <Form.Item
+                  name="username"
+                  rules={[
                     {
-                      value: 'member',
-                      label: 'Member',
-                    },
-                    {
-                      value: 'master',
-                      label: 'Game Master',
-                    },
-                    {
-                      value: 'observer',
-                      label: 'Observer',
+                      required: true,
+                      message: "Please input your username 3 - 15 characters!",
+                      max: 15,
+                      min: 3
                     },
                   ]}
-                />
-              </Form.Item>
-              <Form.Item
-                name="session"
-                rules={[
-                  {
-                    required: true,
-                    message: "Your session",
-                  },
-                ]}
-              >
-                <Input addonBefore="Session"/>
-              </Form.Item>
-              <Form.Item style={{ display: 'flex', justifyContent: 'center' }} >
-                <Button type="primary" htmlType="submit">
-                  Join / Create
-                </Button>
-              </Form.Item>
-            </Form>
-          </Row>
+                >
+                  <Input
+                    placeholder="Enter your username"
+                    prefix={<UserOutlined className="site-form-item-icon" />}
+                    suffix={
+                      <Tooltip title="Extra information">
+                        <InfoCircleOutlined
+                          style={{
+                            color: 'rgba(0,0,0,.45)',
+                          }}
+                        />
+                      </Tooltip>
+                    }
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="role"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Your role",
+                    },
+                  ]}
+                >
+                  <Select
+                    labelInValue
+                    options={[
+                      {
+                        value: 'member',
+                        label: 'Member',
+                      },
+                      {
+                        value: 'master',
+                        label: 'Game Master',
+                      },
+                      {
+                        value: 'observer',
+                        label: 'Observer',
+                      },
+                    ]}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="session"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Your session",
+                    },
+                  ]}
+                >
+                  <Input addonBefore="Session"/>
+                </Form.Item>
+                <Form.Item style={{ display: 'flex', justifyContent: 'center' }} >
+                  <Button type="primary" htmlType="submit">
+                    Join / Create
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Row>
+          </Card>
         </Row>
     </Layout>
+    </div>
   );
 }
 
