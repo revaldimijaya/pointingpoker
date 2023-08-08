@@ -195,7 +195,7 @@ function Homepage({keyProp}) {
               <List.Item>
                 <List.Item.Meta
                   avatar={<FontAwesomeIcon icon={faUser} />}
-                  title={participant.name}
+                  title={participant.name.split('#')[0]}
                 />
               </List.Item>
             )}
@@ -208,7 +208,7 @@ function Homepage({keyProp}) {
               <List.Item>
                 <List.Item.Meta
                   avatar={<FontAwesomeIcon icon={faUser} />}
-                  title={participant.name}
+                  title={participant.name.split('#')[0]}
                   // Add other participant details as needed
                 />
               </List.Item>
@@ -222,7 +222,7 @@ function Homepage({keyProp}) {
               <List.Item>
                 <List.Item.Meta
                   avatar={<FontAwesomeIcon icon={faUser} />}
-                  title={participant.name}
+                  title={participant.name.split('#')[0]}
                   // Add other participant details as needed
                 />
               </List.Item>
@@ -258,7 +258,7 @@ function Homepage({keyProp}) {
                       width: 200,
                       margin: "0 12px 32px 12px"  
                     }} 
-                    title={val.name === user.name ? val.name + ' (you)': val.name}>
+                    title={val.name === user.name ? val.name.split('#')[0] + ' (you)': val.name.split('#')[0]}>
                       <div style={{margin:"24px 0px"}}>
                         <span style={{fontSize:'48px',}}>
                           {

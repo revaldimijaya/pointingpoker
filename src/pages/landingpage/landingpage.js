@@ -23,7 +23,9 @@ function Landingpage({keyProp}) {
   const roomuuid = useParams() 
 
   const onFinish = (values) => {
-    const additionalData = { name: values.username, room: values.session, role: values.role.value };
+    const unique_id = uuidv4();
+    const small_id = unique_id.slice(0,8)
+    const additionalData = { name: values.username+'#'+small_id, room: values.session, role: values.role.value };
     console.log(additionalData)
     navigate('/session', { state: additionalData });
   };
