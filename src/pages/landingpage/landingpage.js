@@ -41,7 +41,8 @@ function Landingpage({keyProp}) {
 
   useEffect(() => {
     window.onpopstate = ()=> {
-      navigate('/')
+      const temp = roomuuid.roomuuid === undefined ? uuidv4() : roomuuid.roomuuid
+      navigate('/'+temp, { replace: true })
       window.location.reload()
     }
   }, []);
