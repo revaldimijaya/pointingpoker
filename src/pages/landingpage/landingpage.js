@@ -39,6 +39,13 @@ function Landingpage({keyProp}) {
     role: { value: 'member', label: 'Member' }
   }
 
+  useEffect(() => {
+    window.onpopstate = ()=> {
+      navigate('/')
+      window.location.reload()
+    }
+  }, []);
+
   return (
     <div>
     <Particles/>
