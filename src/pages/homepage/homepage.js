@@ -44,6 +44,7 @@ function Homepage({keyProp}) {
 
     // // Emit a custom event to check if a given socket ID is the server's socket
     // socket.emit('checkServerSocket', socket.id);
+    // halo
 
     // // Listen for the result from the server
     // socket.on('isServerSocket', (isServerSocket) => {
