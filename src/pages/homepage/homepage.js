@@ -11,7 +11,7 @@ import Ticket from '../ticket/ticket';
 
 const { Header, Content, Footer, Sider } = Layout;
 
-const socket = io.connect('https://pointingpoker-server.vercel.app/'); // Replace with your Socket.IO server URL
+const socket = io.connect('https://revaldi-pointing-poker-server-c29b9ec1de13.herokuapp.com//'); // Replace with your Socket.IO server URL
 
 function Homepage({keyProp}) {
   const [user, setUser] = useState({});
