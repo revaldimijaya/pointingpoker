@@ -109,7 +109,7 @@ function Homepage({keyProp}) {
   const [clicked, setClicked] = useState(false);
 
   const handleCopy = (text) => {
-    navigator.clipboard.writeText("https://pointingpoker-revaldimijaya.vercel.app/"+user.room);
+    navigator.clipboard.writeText("https://revaldimijaya.my.id/"+user.room);
     setClicked(true);
     setTimeout(() => {
       setClicked(false);
@@ -117,8 +117,8 @@ function Homepage({keyProp}) {
   }
 
   const storyPoints = [
-    [1,2,3,4,5],
-    [6,7,8,9,10],
+    [1,2,3,5],
+    [8,13,21,34],
   ]
 
   const summaryDescription = [
