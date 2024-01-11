@@ -1,3 +1,4 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /public/  # Allow crawling of the public directory
+
+Sitemap: https://revaldimijaya.my.id/sitemap.xml
