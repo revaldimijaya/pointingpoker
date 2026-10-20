@@ -5,7 +5,7 @@ import { CopyOutlined, TeamOutlined } from '@ant-design/icons';
 // `onOpenPeople` is given (phones), a button that opens the people list.
 export function RoomHeader({ room, connected, participantCount, onOpenPeople }) {
   const copyLink = async () => {
-    await navigator.clipboard.writeText(`${window.location.origin}/${room}`);
+    await navigator.clipboard.writeText(`${window.location.origin}/${encodeURIComponent(room)}`);
     message.success('Link copied');
   };
 

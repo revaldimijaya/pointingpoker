@@ -1,6 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { message } from 'antd';
 import { RoomHeader } from './RoomHeader';
+
+// antd keeps one global message holder; clear it so a "Link copied" never leaks into the next test.
+afterEach(() => act(() => message.destroy()));
 
 const renderHeader = (props = {}) =>
   render(<RoomHeader room="demo-room" connected participantCount={3} {...props} />);
@@ -17,8 +21,17 @@ test('copy writes origin + /room to the clipboard and shows Link copied', async 
   const writeText = jest.fn().mockResolvedValue();
   Object.assign(navigator, { clipboard: { writeText } });
   renderHeader();
-  userEvent.click(screen.getByRole('button', { name: 'Copy invite link' }));
+  await act(async () => userEvent.click(screen.getByRole('button', { name: 'Copy invite link' })));
   expect(writeText).toHaveBeenCalledWith(`${window.location.origin}/demo-room`);
+  expect(await screen.findByText('Link copied')).toBeInTheDocument();
+});
+
+test('the copied link encodes a room name with special characters', async () => {
+  const writeText = jest.fn().mockResolvedValue();
+  Object.assign(navigator, { clipboard: { writeText } });
+  renderHeader({ room: 'Sprint #12/a?b' });
+  await act(async () => userEvent.click(screen.getByRole('button', { name: 'Copy invite link' })));
+  expect(writeText).toHaveBeenCalledWith(`${window.location.origin}/Sprint%20%2312%2Fa%3Fb`);
   expect(await screen.findByText('Link copied')).toBeInTheDocument();
 });
 
