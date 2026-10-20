@@ -1,30 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {
-  BrowserRouter as Router,
-  Route,
-  withRouter,
-  Routes,
-  Link,
-  hashHistory,
-} from "react-router-dom";
-import Homepage from './pages/homepage/homepage';
-import Landingpage from './pages/landingpage/landingpage';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ConfigProvider } from 'antd';
+import JoinPage from './pages/JoinPage/JoinPage';
+import RoomPage from './pages/RoomPage/RoomPage';
+
+// controlHeightLG is the height of `size="large"` controls: 44px keeps them comfortable touch targets.
+const theme = { token: { colorPrimary: '#4f46e5', borderRadius: 8, controlHeightLG: 44 } };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <Router>
-    <Routes>
-      <Route path="/:roomuuid?" element={<Landingpage/>}></Route>
-      <Route path="/session" element={<Homepage/>} ></Route>
-    </Routes>
-  </Router>
+  <ConfigProvider theme={theme}>
+    <Router>
+      <Routes>
+        <Route path="/:roomuuid?" element={<JoinPage />} />
+        <Route path="/session" element={<RoomPage />} />
+      </Routes>
+    </Router>
+  </ConfigProvider>,
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
