@@ -7,7 +7,8 @@ import { ConfigProvider } from 'antd';
 import JoinPage from './pages/JoinPage/JoinPage';
 import RoomPage from './pages/RoomPage/RoomPage';
 
-const theme = { token: { colorPrimary: '#4f46e5', borderRadius: 8 } };
+// controlHeightLG is the height of `size="large"` controls: 44px keeps them comfortable touch targets.
+const theme = { token: { colorPrimary: '#4f46e5', borderRadius: 8, controlHeightLG: 44 } };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

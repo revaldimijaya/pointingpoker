@@ -61,20 +61,20 @@ export default function JoinPage() {
             name="username"
             rules={[{ required: true, message: 'Please input your username 3 - 15 characters!', min: 3, max: 15 }]}
           >
-            <Input placeholder="Enter your username" prefix={<UserOutlined />} />
+            <Input size="large" placeholder="Enter your username" prefix={<UserOutlined />} />
           </Form.Item>
           <Form.Item
             name="role"
             rules={[{ required: true, message: 'Your role' }]}
             extra={ROLE_HINTS[selectedRole]}
           >
-            <Select options={ROLE_OPTIONS} />
+            <Select size="large" options={ROLE_OPTIONS} />
           </Form.Item>
           <Form.Item name="session" rules={[{ required: true, message: 'Your session' }]}>
-            <Input addonBefore="Session" />
+            <Input size="large" addonBefore="Session" />
           </Form.Item>
           <Form.Item className="join-card__submit">
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" size="large" htmlType="submit">
               Join / Create
             </Button>
           </Form.Item>
