@@ -1,0 +1,55 @@
+.room-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+
+.room-header__title {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.room-header__room {
+  margin: 0;
+  font-size: 18px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+}
+
+.status-dot--online {
+  background: #52c41a;
+}
+
+.status-dot--offline {
+  background: #bfbfbf;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.vote-card__value {
+  font-size: 48px;
+  text-align: center;
+}
+
+.vote-pad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.master-controls {
+  display: flex;
+  gap: 16px;
+}

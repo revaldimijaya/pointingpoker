@@ -1,0 +1,23 @@
+.join-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.join-card {
+  width: 100%;
+  max-width: 360px;
+}
+
+.join-card__logo {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 24px;
+}
+
+.join-card__submit {
+  display: flex;
+  justify-content: center;
+}
