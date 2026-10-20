@@ -1,5 +1,6 @@
 .join-page {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,7 +15,18 @@
 .join-card__logo {
   display: flex;
   justify-content: center;
-  padding-bottom: 24px;
+  padding-bottom: 16px;
+}
+
+.join-card__logo img {
+  width: 96px;
+  height: auto;
+}
+
+@media (min-width: 768px) {
+  .join-card__logo img {
+    width: 140px;
+  }
 }
 
 .join-card__submit {
