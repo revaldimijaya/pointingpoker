@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal } from 'antd';
+import { Drawer, Grid, Modal } from 'antd';
 import { Navigate, useLocation } from 'react-router-dom';
 import { ROLES, STORY_POINTS } from '../../constants';
 import TicketForm from '../TicketForm/TicketForm';
@@ -27,11 +27,21 @@ function Room({ room, name, role }) {
   const { me, connected, participants, description, revealed, result, vote, reveal, reset, publishDescription } =
     useRoomSocket({ room, name, role });
   const [ticketOpen, setTicketOpen] = useState(false);
+  const [peopleOpen, setPeopleOpen] = useState(false);
   const members = participants.filter((participant) => participant.role === ROLES.MEMBER);
+
+  // Below 768px the people list lives in a drawer; from 768px it is a side panel.
+  const isPhone = !Grid.useBreakpoint().md;
+  const people = <ParticipantList participants={participants} meId={me?.id} />;
 
   return (
     <div className="room">
-      <RoomHeader room={room} connected={connected} participantCount={participants.length} />
+      <RoomHeader
+        room={room}
+        connected={connected}
+        participantCount={participants.length}
+        onOpenPeople={isPhone ? () => setPeopleOpen(true) : undefined}
+      />
       <div className="room__body">
         <main className="room__main">
           <TaskPanel
@@ -52,9 +62,7 @@ function Room({ room, name, role }) {
             ))}
           </div>
         </main>
-        <aside className="room__people">
-          <ParticipantList participants={participants} meId={me?.id} />
-        </aside>
+        {!isPhone && <aside className="room__people">{people}</aside>}
       </div>
       <footer className="dock">
         <Dock
@@ -66,6 +74,18 @@ function Room({ room, name, role }) {
           onReset={reset}
         />
       </footer>
+      {isPhone && (
+        <Drawer
+          className="people-drawer"
+          title="People"
+          placement="right"
+          width={280}
+          open={peopleOpen}
+          onClose={() => setPeopleOpen(false)}
+        >
+          {people}
+        </Drawer>
+      )}
       <Modal title="Jira Ticket" open={ticketOpen} onCancel={() => setTicketOpen(false)} footer={null} destroyOnClose>
         <TicketForm description={description} totalSP={result?.average} />
       </Modal>
