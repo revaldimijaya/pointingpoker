@@ -10,6 +10,9 @@ const defaultCreateSocket = () => io(SOCKET_URL);
 // in sync with the server's events, and exposes the actions a participant can take.
 export function useRoomSocket({ room, name, role }, createSocket = defaultCreateSocket) {
   const socketRef = useRef(null);
+  // The server forgets a participant's vote when their socket reconnects (new socket id), so
+  // the latest vote is sent again after rejoining. A reset clears it.
+  const lastVoteRef = useRef(null);
   const [socketId, setSocketId] = useState(null);
   const [connected, setConnected] = useState(false);
   const [participants, setParticipants] = useState([]);
@@ -26,11 +29,13 @@ export function useRoomSocket({ room, name, role }, createSocket = defaultCreate
         setSocketId(socket.id);
         setConnected(true);
         socket.emit(EVENTS.JOIN_ROOM, { room, name, role });
+        if (lastVoteRef.current !== null) socket.emit(EVENTS.VOTE, { room, value: lastVoteRef.current });
       },
       disconnect: () => setConnected(false),
       [EVENTS.PARTICIPANTS]: setParticipants,
       [EVENTS.REVEAL]: () => setRevealed(true),
       [EVENTS.RESET]: () => {
+        lastVoteRef.current = null;
         setRevealed(false);
         setResult(null);
       },
@@ -49,6 +54,7 @@ export function useRoomSocket({ room, name, role }, createSocket = defaultCreate
   const me = participants.find((participant) => participant.id === socketId);
 
   const vote = (value) => {
+    lastVoteRef.current = value;
     socketRef.current.emit(EVENTS.VOTE, { room, value });
   };
 

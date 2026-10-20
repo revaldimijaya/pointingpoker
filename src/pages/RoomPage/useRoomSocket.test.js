@@ -50,6 +50,42 @@ test('joins the room on every connect, including reconnects', () => {
   ]);
 });
 
+test('after a reconnect with a new socket id, the last vote is sent again after joining', () => {
+  const { socket, result } = setup({ id: 's1' });
+  act(() => socket.trigger('connect'));
+  act(() => result.current.vote(5));
+  act(() => socket.trigger('disconnect'));
+  socket.id = 's9';
+  socket.emitted.length = 0;
+  act(() => socket.trigger('connect'));
+  expect(socket.emitted).toEqual([
+    [EVENTS.JOIN_ROOM, { room: 'r1', name: 'Alice#1', role: 'member' }],
+    [EVENTS.VOTE, { room: 'r1', value: 5 }],
+  ]);
+});
+
+test('a vote made while offline is sent after joining on the next connect', () => {
+  const { socket, result } = setup();
+  act(() => socket.trigger('connect'));
+  act(() => socket.trigger('disconnect'));
+  act(() => result.current.vote(8));
+  act(() => socket.trigger('connect'));
+  expect(socket.emitted.slice(-2)).toEqual([
+    [EVENTS.JOIN_ROOM, { room: 'r1', name: 'Alice#1', role: 'member' }],
+    [EVENTS.VOTE, { room: 'r1', value: 8 }],
+  ]);
+});
+
+test('a reset event clears the remembered vote, so a later reconnect only joins', () => {
+  const { socket, result } = setup();
+  act(() => socket.trigger('connect'));
+  act(() => result.current.vote(5));
+  act(() => socket.trigger(EVENTS.RESET));
+  socket.emitted.length = 0;
+  act(() => socket.trigger('connect'));
+  expect(socket.emitted).toEqual([[EVENTS.JOIN_ROOM, { room: 'r1', name: 'Alice#1', role: 'member' }]]);
+});
+
 test('connected follows connect and disconnect', () => {
   const { socket, result } = setup();
   expect(result.current.connected).toBe(false);
